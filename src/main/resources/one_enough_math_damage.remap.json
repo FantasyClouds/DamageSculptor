@@ -1,0 +1,7 @@
+{
+  "mappings": {
+    "com/fantasyclouds/one_enough_math_damage/mixin/hurtMixin": {
+      "hurt": "Lnet/minecraft/world/entity/LivingEntity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+    }
+  }
+}
