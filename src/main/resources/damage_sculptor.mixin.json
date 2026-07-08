@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.fantasyclouds.damage_sculptor.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "one_enough_math_damage.refmap.json",
+  "refmap": "damage_sculptor.refmap.json",
   "mixins": [
     "hurtMixin"
   ],
