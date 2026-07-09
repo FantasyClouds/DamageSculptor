@@ -19,23 +19,23 @@ public class DamageMappingData {
     private String function;
 
     @SerializedName("curvature")
-    private double curvature = 1.0;
+    private double curvature;
 
     @SerializedName("nodes")
     private List<List<Double>> nodes;
 
     // 替换原来的 clampSource / clampTarget 为四个独立开关，默认均为 true
     @SerializedName("clamp_source_min")
-    private boolean clampSourceMin = true;
+    private boolean clampSourceMin;
 
     @SerializedName("clamp_source_max")
-    private boolean clampSourceMax = true;
+    private boolean clampSourceMax;
 
     @SerializedName("clamp_target_min")
-    private boolean clampTargetMin = true;
+    private boolean clampTargetMin;
 
     @SerializedName("clamp_target_max")
-    private boolean clampTargetMax = true;
+    private boolean clampTargetMax;
 
     // ---------- getters ----------
     public String getEntity() {

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 public class DamageSculptor {
 
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "Damage Sculptor";
+    public static final String MODID = "damage_sculptor";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
