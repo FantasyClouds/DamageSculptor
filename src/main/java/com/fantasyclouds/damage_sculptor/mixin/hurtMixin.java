@@ -5,27 +5,35 @@ import com.fantasyclouds.damage_sculptor.util.DamageMappingData;
 import com.fantasyclouds.damage_sculptor.util.DamageMappingLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.List;
+
 @Mixin(value = LivingEntity.class)
 public abstract class hurtMixin {
     @ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private float applyDamageMapping(float amount, DamageSource source) {
 
-        if (source.getEntity() == null || !(source.getEntity() instanceof LivingEntity attacker)) {
+        if (source.getEntity() == null) {
             return amount;
         }
+        Entity attacker = source.getEntity();
         if (attacker.level().isClientSide()) {
             return amount;
         }
+        Entity trueAttacker = attacker;
+        if (trueAttacker instanceof Projectile projectile && projectile.getOwner() instanceof LivingEntity owner) {
+            trueAttacker = owner;
+        }
 
-        String entityKey = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
+        String entityKey = ForgeRegistries.ENTITY_TYPES.getKey(trueAttacker.getType()).toString();
         DamageMappingData data = DamageMappingLoader.getMapping(entityKey);
         if (data == null) {
             return amount;
@@ -97,7 +105,7 @@ public abstract class hurtMixin {
             LivingEntity victim = (LivingEntity) (Object) this;
             if (victim instanceof Player player) {
                 String msg = String.format("§e[DamageMapper] §fRaw: %.1f → Mapped: %.1f §7(from %s)",
-                        amount, newDamage, source.getEntity() != null ? source.getEntity().getName().getString() : "unknown");
+                        amount, newDamage, source.getEntity() != null ? trueAttacker.getName().getString() : "unknown");
                 player.displayClientMessage(Component.literal(msg), false);
             }
         }
