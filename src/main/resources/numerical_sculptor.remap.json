@@ -1,6 +1,6 @@
 {
   "mappings": {
-    "com/fantasyclouds/damage_sculptor/mixin/hurtMixin": {
+    "com/fantasyclouds/numerical_sculptor/mixin/hurtMixin": {
       "hurt": "Lnet/minecraft/world/entity/LivingEntity;m_6469_(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
     }
   }

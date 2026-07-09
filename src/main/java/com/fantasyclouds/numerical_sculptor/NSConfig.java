@@ -1,10 +1,10 @@
-package com.fantasyclouds.damage_sculptor;
+package com.fantasyclouds.numerical_sculptor;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = "one_enough_math_damage", bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DSConfig {
+public class NSConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     public static final ForgeConfigSpec.BooleanValue DEBUG_ENABLED =

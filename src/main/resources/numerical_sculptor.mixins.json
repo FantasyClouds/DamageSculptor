@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.fantasyclouds.damage_sculptor.mixin",
+  "package": "com.fantasyclouds.numerical_sculptor.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "damage_sculptor.remap.json",
+  "refmap": "numerical_sculptor.remap.json",
   "mixins": [
     "hurtMixin"
   ],

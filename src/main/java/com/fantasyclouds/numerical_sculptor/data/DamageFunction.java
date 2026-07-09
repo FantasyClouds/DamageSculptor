@@ -1,4 +1,4 @@
-package com.fantasyclouds.damage_sculptor.util;
+package com.fantasyclouds.numerical_sculptor.data;
 
 import java.util.Locale;
 

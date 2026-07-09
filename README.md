@@ -1,17 +1,63 @@
-# DamageSculptor
+# Numerical Sculptor
 
-**优雅的数值重塑模组 —— 用数学统一伤害配置，告别盲调倍率**
+**优雅的数值重塑模组 —— 用数学统一数值配置，告别盲调倍率**
 
 ---
 
 ## 简介
 
 在高度模组化的 Minecraft 整合包中，不同 Mod 的生物伤害数值差异巨大，硬编码的伤害值让全局平衡几乎不可能。  
-**DamageSculptor** 提供了一套 **数据包驱动、数学严谨、可热重载** 的伤害映射系统，让你通过简单的 JSON 配置，就能将任何生物的任意伤害值，精准地重塑到你计算出的标准区间内，同时保留原模组的技能分化，或按你的意愿主动扭曲伤害分布。
+**DamageSculptor** 提供了一套 **数据包驱动、数学严谨、可热重载** 的数值映射系统，让你通过几条简单的 JSON 配置，就能将一种生物的数值精准把控。
+
+### 模组特性
+
+* 该模组的伤害数值是写在Mixin中的，优先于所有模组伤害修改，可被其他模组继续增幅
+* 该模组的血量数值通过直接修改Attribute完成，忽略对玩家的修改。
+
+## 配置总览
+
+在任意数据包创建以下路径：<br>
+
+```
+data/<命名空间>/entity_damage/<任意名称>.json
+```
+
+模组会扫描所有命名空间下的 `entity_damage` 文件夹及其子文件夹中的所有 JSON 文件。
+
+如果有多个json定义了同一个实体属性，如果格式正确的话，模组会尝试合并它们的伤害和血量。
+
+但只有第一次读取的有效配置作数。
+
+这意味着你可以将血量和伤害分开为两个json，这没问题，但如果既有伤害又有血量，而伤害写错的话，整个文件会失效。
+
+
+
+### 字段说明
+
+### 伤害相关：
+| 字段	               |类型|                                             	说明                                              |
+|:------------------|-----:|:--------------------------------------------------------------------------------------------:|
+| entity            |	string	|                                必须。生物的注册名，如 minecraft:zombie。                                 
+| standard_range    |	[min, max]	|                       必须。原生观察区间。通常下限填 0，上限是你根据大量模组经验确定的“普通技能”阈值，如 15。                        |
+| target_range      |	[min, max]	|                        必须。映射后的目标伤害区间。下限通常为 0，上限为你为该生物计算出的标准伤害值（如 35）。                        |
+| function	         |string	|                            必须。映射函数类型：linear、nonlinear、piecewise。                             |
+| curvature	        |number	|    曲率参数，仅 nonlinear 时使用。c=1 为对数压缩，c=2 为线性，c>2 为指数拉伸，c<1 越偏离线性凸凹越强。c=-10 等负值会制造“一刀切”阶梯效果。     |
+| nodes             |	array	| 分段节点，仅 piecewise 时使用。格式为 [[x1,y1], [x2,y2], ...]，x 必须在 [0,1] 内并严格递增，首节点 x 必须为 0，末节点 x 必须为 1。 |
+| clamp_source_min  |	boolean	|                        是否将原始伤害下限钳制在 standard_range 内。默认为 false（允许外推）。                        |
+| clamp_source_max  |	boolean	|                        是否将原始伤害上限钳制在 standard_range 内。默认为 false（允许外推）。                        |
+| clamp_target_min	 |boolean	|                            是否将映射后伤害下限钳制在 target_range 内。默认为 false                            |
+| clamp_target_max	 |boolean	|                            是否将映射后伤害上限钳制在 target_range 内。默认为 false                            |
+
+### 血量相关：
+
+| 字段	               |类型|              	说明              |
+|:------------------|-----:|:-----------------------------:|
+| entity            |	string	| 必须。生物的注册名，如 minecraft:zombie。 |
+| max_health    |	number	|         可选。不填则默认为原血量。         |
 
 ---
 
-## 特性
+## 伤害配置
 
 - **数据包配置**：所有映射规则放在数据包的 `entity_damage` 文件夹中，无需编写代码。
 - **三种映射模式**：
@@ -26,29 +72,14 @@
 
 ---
 
-## 安装
-
-1. 下载与本模组兼容的 Minecraft 版本（Forge 1.20.1）的 Jar 文件。
-2. 放入 `.minecraft/mods` 文件夹。
-3. 启动游戏，模组会自动生成默认配置文件。
-
----
-
 ## 配置方式
 
-### 1. 数据包结构
 
-在任意数据包创建以下路径：<br>
-
-```
-data/<命名空间>/entity_damage/<任意名称>.json
-```
-
-
-
-模组会扫描所有命名空间下的 `entity_damage` 文件夹及其子文件夹中的所有 JSON 文件。
 
 ### 2. JSON 配置格式
+
+
+
 
 ```json
 //线性方法映射
@@ -97,21 +128,6 @@ data/<命名空间>/entity_damage/<任意名称>.json
   "clamp_target_max": true
 }
 ```
-
-### 字段说明
-
-| 字段	               |类型|                                             	说明                                              |
-|:------------------|-----:|:--------------------------------------------------------------------------------------------:|
-| entity            |	string	|                                必须。生物的注册名，如 minecraft:zombie。                                 
-| standard_range    |	[min, max]	|                       必须。原生观察区间。通常下限填 0，上限是你根据大量模组经验确定的“普通技能”阈值，如 15。                        |
-| target_range      |	[min, max]	|                        必须。映射后的目标伤害区间。下限通常为 0，上限为你为该生物计算出的标准伤害值（如 35）。                        |
-| function	         |string	|                            必须。映射函数类型：linear、nonlinear、piecewise。                             |
-| curvature	        |number	|    曲率参数，仅 nonlinear 时使用。c=1 为对数压缩，c=2 为线性，c>2 为指数拉伸，c<1 越偏离线性凸凹越强。c=-10 等负值会制造“一刀切”阶梯效果。     |
-| nodes             |	array	| 分段节点，仅 piecewise 时使用。格式为 [[x1,y1], [x2,y2], ...]，x 必须在 [0,1] 内并严格递增，首节点 x 必须为 0，末节点 x 必须为 1。 |
-| clamp_source_min  |	boolean	|                        是否将原始伤害下限钳制在 standard_range 内。默认为 false（允许外推）。                        |
-| clamp_source_max  |	boolean	|                        是否将原始伤害上限钳制在 standard_range 内。默认为 false（允许外推）。                        |
-| clamp_target_min	 |boolean	|                            是否将映射后伤害下限钳制在 target_range 内。默认为 false                            |
-| clamp_target_max	 |boolean	|                            是否将映射后伤害上限钳制在 target_range 内。默认为 false                            |
 
 ### 3.映射逻辑简述
 首先我们有一个参考区间：

@@ -1,8 +1,8 @@
-package com.fantasyclouds.damage_sculptor.mixin;
+package com.fantasyclouds.numerical_sculptor.mixin;
 
-import com.fantasyclouds.damage_sculptor.DSConfig;
-import com.fantasyclouds.damage_sculptor.util.DamageMappingData;
-import com.fantasyclouds.damage_sculptor.util.DamageMappingLoader;
+import com.fantasyclouds.numerical_sculptor.NSConfig;
+import com.fantasyclouds.numerical_sculptor.data.DamageMappingData;
+import com.fantasyclouds.numerical_sculptor.core.NumericalMappingLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +25,7 @@ public abstract class hurtMixin {
             return amount;
         }
         Entity attacker = source.getEntity();
-        if (attacker.level().isClientSide()) {
+        if (attacker.level().isClientSide() || attacker instanceof Player) {
             return amount;
         }
         Entity trueAttacker = attacker;
@@ -34,8 +34,8 @@ public abstract class hurtMixin {
         }
 
         String entityKey = ForgeRegistries.ENTITY_TYPES.getKey(trueAttacker.getType()).toString();
-        DamageMappingData data = DamageMappingLoader.getMapping(entityKey);
-        if (data == null) {
+        DamageMappingData data = NumericalMappingLoader.getMapping(entityKey);
+        if (data != null && !data.hasValidDamageConfig()) {
             return amount;
         }
 
@@ -101,7 +101,7 @@ public abstract class hurtMixin {
         }
 
         // 调试信息
-        if (DSConfig.DEBUG_ENABLED.get()) {
+        if (NSConfig.DEBUG_ENABLED.get()) {
             LivingEntity victim = (LivingEntity) (Object) this;
             if (victim instanceof Player player) {
                 String msg = String.format("§e[DamageMapper] §fRaw: %.1f → Mapped: %.1f §7(from %s)",
