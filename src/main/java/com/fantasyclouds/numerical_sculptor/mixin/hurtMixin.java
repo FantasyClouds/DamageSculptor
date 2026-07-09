@@ -35,7 +35,7 @@ public abstract class hurtMixin {
 
         String entityKey = ForgeRegistries.ENTITY_TYPES.getKey(trueAttacker.getType()).toString();
         DamageMappingData data = NumericalMappingLoader.getMapping(entityKey);
-        if (data != null && !data.hasValidDamageConfig()) {
+        if (data == null || !data.hasValidDamageConfig()) {
             return amount;
         }
 
