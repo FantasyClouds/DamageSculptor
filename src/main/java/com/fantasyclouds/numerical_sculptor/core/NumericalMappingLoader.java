@@ -90,6 +90,7 @@ public class NumericalMappingLoader {
                         existing.clampSourceMax = newConfig.isClampSourceMax();
                         existing.clampTargetMin = newConfig.isClampTargetMin();
                         existing.clampTargetMax = newConfig.isClampTargetMax();
+                        existing.armorPieceMultiplier = newConfig.getArmorPieceMultiplier();
                         merged = true;
                     } else if (newConfig.hasValidDamageConfig()) {
                         LOGGER.warn("Damage config for entity '{}' already present, ignoring from {}", key, res);

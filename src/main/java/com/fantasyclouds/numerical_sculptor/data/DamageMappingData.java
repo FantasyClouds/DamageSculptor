@@ -23,7 +23,7 @@ public class DamageMappingData {
     public String function;
 
     @SerializedName("curvature")
-    public double curvature;
+    public double curvature = 1.0;
 
     @SerializedName("nodes")
     public List<List<Double>> nodes;
@@ -40,6 +40,9 @@ public class DamageMappingData {
 
     @SerializedName("clamp_target_max")
     public boolean clampTargetMax;
+
+    @SerializedName("armor_piece_multiplier")
+    public double armorPieceMultiplier = 1.0;
 
     // ---------- getters ----------
     public String getEntity() {
@@ -82,39 +85,14 @@ public class DamageMappingData {
         return clampTargetMax;
     }
 
+    public double getArmorPieceMultiplier() {
+        return armorPieceMultiplier;
+    }
+
     public Double getMaxHealth() {
         return maxHealth;
     }
-    // ---------- 数据校验 ----------
-    public boolean isValid() {
-        if (entity == null || entity.isEmpty()) return false;
-        if (standardRange == null || standardRange.size() < 2) return false;
-        if (targetRange == null || targetRange.size() < 2) return false;
-        if (standardRange.get(0) >= standardRange.get(1) || standardRange.get(1) <= 0) return false;
-        if (targetRange.get(0) > targetRange.get(1)) return false;
-        if (function == null || function.isEmpty()) return false;
-        if (maxHealth != null && maxHealth <= 0) return false;
 
-        String funcLower = function.toLowerCase(Locale.ROOT);
-        if (!funcLower.matches("linear|nonlinear|piecewise")) {
-            return false;
-        }
-
-        if (funcLower.equals("piecewise")) {
-            if (nodes == null || nodes.size() < 2) return false;
-            double prevX = -Double.MAX_VALUE;
-            for (List<Double> node : nodes) {
-                if (node == null || node.size() != 2) return false;
-                double x = node.get(0);
-                if (x < prevX) return false;
-                prevX = x;
-            }
-            if (nodes.get(0).get(0) != 0.0 || nodes.get(nodes.size() - 1).get(0) != 1.0) {
-                return false;
-            }
-        }
-        return true;
-    }
     public boolean hasHealthConfig() {
         return maxHealth != null && maxHealth > 0;
     }

@@ -35,18 +35,19 @@ data/<命名空间>/entity_damage/<任意名称>.json
 ### 字段说明
 
 ### 伤害相关：
-| 字段	               |类型|                                             	说明                                              |
-|:------------------|-----:|:--------------------------------------------------------------------------------------------:|
-| entity            |	string	|                                必须。生物的注册名，如 minecraft:zombie。                                 
-| standard_range    |	[min, max]	|                       必须。原生观察区间。通常下限填 0，上限是你根据大量模组经验确定的“普通技能”阈值，如 15。                        |
-| target_range      |	[min, max]	|                        必须。映射后的目标伤害区间。下限通常为 0，上限为你为该生物计算出的标准伤害值（如 35）。                        |
-| function	         |string	|                            必须。映射函数类型：linear、nonlinear、piecewise。                             |
-| curvature	        |number	|    曲率参数，仅 nonlinear 时使用。c=1 为对数压缩，c=2 为线性，c>2 为指数拉伸，c<1 越偏离线性凸凹越强。c=-10 等负值会制造“一刀切”阶梯效果。     |
-| nodes             |	array	| 分段节点，仅 piecewise 时使用。格式为 [[x1,y1], [x2,y2], ...]，x 必须在 [0,1] 内并严格递增，首节点 x 必须为 0，末节点 x 必须为 1。 |
-| clamp_source_min  |	boolean	|                        是否将原始伤害下限钳制在 standard_range 内。默认为 false（允许外推）。                        |
-| clamp_source_max  |	boolean	|                        是否将原始伤害上限钳制在 standard_range 内。默认为 false（允许外推）。                        |
-| clamp_target_min	 |boolean	|                            是否将映射后伤害下限钳制在 target_range 内。默认为 false                            |
-| clamp_target_max	 |boolean	|                            是否将映射后伤害上限钳制在 target_range 内。默认为 false                            |
+| 字段	               |           类型 |                                             	说明                                              |
+|:------------------|-------------:|:--------------------------------------------------------------------------------------------:|
+| entity            |     	string	 |                                必须。生物的注册名，如 minecraft:zombie。                                 
+| standard_range    | 	[min, max]	 |                       必须。原生观察区间。通常下限填 0，上限是你根据大量模组经验确定的“普通技能”阈值，如 15。                        |
+| target_range      | 	[min, max]	 |                        必须。映射后的目标伤害区间。下限通常为 0，上限为你为该生物计算出的标准伤害值（如 35）。                        |
+| function	         |      string	 |                            必须。映射函数类型：linear、nonlinear、piecewise。                             |
+| curvature	        |      number	 |    曲率参数，仅 nonlinear 时使用。c=1 为对数压缩，c=2 为线性，c>2 为指数拉伸，c<1 越偏离线性凸凹越强。c=-10 等负值会制造“一刀切”阶梯效果。     |
+| nodes             |      	array	 | 分段节点，仅 piecewise 时使用。格式为 [[x1,y1], [x2,y2], ...]，x 必须在 [0,1] 内并严格递增，首节点 x 必须为 0，末节点 x 必须为 1。 |
+| clamp_source_min  |    	boolean	 |                        是否将原始伤害下限钳制在 standard_range 内。默认为 false（允许外推）。                        |
+| clamp_source_max  |    	boolean	 |                        是否将原始伤害上限钳制在 standard_range 内。默认为 false（允许外推）。                        |
+| clamp_target_min	 |     boolean	 |                            是否将映射后伤害下限钳制在 target_range 内。默认为 false                            |
+| clamp_target_max	 |     boolean	 |                            是否将映射后伤害上限钳制在 target_range 内。默认为 false                            |
+| armor_piece_multiplier	 |      number	 |                              可选，如果伤害类型是穿甲伤害，则将映射后最终伤害乘算此系数，默认为1                              |
 
 ### 血量相关：
 

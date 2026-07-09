@@ -4,6 +4,7 @@ import com.fantasyclouds.numerical_sculptor.NSConfig;
 import com.fantasyclouds.numerical_sculptor.data.DamageMappingData;
 import com.fantasyclouds.numerical_sculptor.core.NumericalMappingLoader;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -87,6 +88,11 @@ public abstract class hurtMixin {
         }
         if (data.isClampTargetMax() && newDamage > tgtMax) {
             newDamage = tgtMax;
+        }
+
+        // ----- 穿甲伤害倍率调整 -----
+        if (data.getArmorPieceMultiplier() != 1.0 && source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+            newDamage *= data.getArmorPieceMultiplier();
         }
 
         // ----- 浮点安全性修正 -----
