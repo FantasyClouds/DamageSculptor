@@ -1,5 +1,6 @@
 package com.fantasyclouds.numerical_sculptor;
 
+import com.fantasyclouds.numerical_sculptor.network.SyncItemModifiersChunkPacket;
 import com.fantasyclouds.numerical_sculptor.network.SyncItemModifiersPacket;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,12 @@ public class NumericalSculptor {
                 SyncItemModifiersPacket::encode,
                 SyncItemModifiersPacket::decode,
                 SyncItemModifiersPacket::handle);
+
+
+        NETWORK.registerMessage(0, SyncItemModifiersChunkPacket.class,
+                SyncItemModifiersChunkPacket::encode,
+                SyncItemModifiersChunkPacket::decode,
+                SyncItemModifiersChunkPacket::handle);
     }
 
 }
