@@ -43,7 +43,7 @@ public class ItemAttributeLoader {
         Map<String, List<ItemModifierEntry>> newMap = new HashMap<>();
 
         Collection<ResourceLocation> resources = resourceManager.listResources(
-                "item_modifiers", loc -> loc.getPath().endsWith(".json")
+                "item_attribute_modifiers", loc -> loc.getPath().endsWith(".json")
         ).keySet();
 
         NumericalSculptor.LOGGER.info("Found {} item modifier configuration(s)", resources.size());
